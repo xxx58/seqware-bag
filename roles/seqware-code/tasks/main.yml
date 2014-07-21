@@ -51,7 +51,7 @@
   sudo: yes
   sudo_user: "{{ user_name }}"
   when: "'master' in group_names"
-  git: update=no repo=https://github.com/SeqWare/seqware.git dest=~{{ user_name }}/gitroot/seqware version={{ seqware_repo_version }}
+  git: repo=https://github.com/SeqWare/seqware.git dest=~{{ user_name }}/gitroot/seqware version={{ seqware_version }}
 
 # setup bash profile for seqware
 - name:  Bash profile
