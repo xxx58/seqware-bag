@@ -36,17 +36,6 @@
 - name:  Start TaskTracker
   service: name=hadoop-0.20-mapreduce-tasktracker state=started
 
-# This is duplicated from common, need to share tasks
-# TODO: need hdfs-site.xml configured properly using alternatives, but for now just copy it 
-- name:  Copy HBase Config
-  copy: 
-    src: hadoop-files/conf.my_cluster/hbase-site.xml
-    dest: /etc/hbase/conf/hbase-site.xml
-  register: hbaseconfig
-  
-- name:  HBase
-  service: name=hbase-regionserver state=started
-
 - name:  Setup daemons to start on boot
   service: name={{ item }} state=started enabled=yes
   with_items: 

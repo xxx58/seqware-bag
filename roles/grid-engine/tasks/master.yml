@@ -108,9 +108,8 @@
   
 # Again, if this was better, we would re-create the environment if there were changes in the template
 - name: SGE | Setup serial profile environment
-  command: $item
+  command: "{{ item }}"
   with_items:
       - qconf -Ap /etc/gridengine/templates/sge_serial_profile
       - qconf -aattr queue pe_list serial main.q
-  when: serial_profile.changed
-  ignore_errors: yes
+  when:  "'serial is not a parallel environment' in sge_parallel_env.stderr or serial_profile.changed"

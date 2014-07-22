@@ -126,6 +126,18 @@
     - perl -0pi -e "s/<name>oozie.service.JPAService.jdbc.password<\/name>[.\s]*<value> <\/value>/<name>oozie.service.JPAService.jdbc.password<\/name><value>oozie<\/value>/;" /etc/oozie/conf/oozie-site.xml
     - sudo -u oozie /usr/lib/oozie/bin/ooziedb.sh create -run
     
+# need to figure out how to refactor this cleanly
+- name:  Register oozie database relations
+  shell: psql -U oozie --command "\dt"
+  register: oozie_database_state
+  changed_when: False
+
+# will need to parameterize this if we ever want the webservice to be on a different host
+- name: create database for oozie
+  when: "oozie_database_state.stdout.find('No relations found.') != -1"
+  shell: sudo -u oozie /usr/lib/oozie/bin/ooziedb.sh create -run
+
+    
 - name:  Oozie started for variable registration 
   service: name=oozie state=started
 
@@ -173,34 +185,15 @@
   lineinfile: 
     dest: /etc/sudoers
     create: no
-    line: $item
+    line: "{{ item }}"
     state: present
     insertafter: EOF
+    validate: visudo -cf %s
   with_items: 
-      - 'oozie ALL=(ALL) NOPASSWD: {{ qsub_path.stdout  }}'
-      - 'oozie ALL=(ALL) NOPASSWD: ALL'
-      - 'seqware ALL=(ALL) NOPASSWD: ALL'
+      - "oozie ALL=(ALL) NOPASSWD: {{ qsub_path.stdout  }}"
+      - "oozie ALL=(ALL) NOPASSWD: ALL"
+      - "seqware ALL=(ALL) NOPASSWD: ALL"
   notify: restart oozie
-
-# TODO: need hdfs-site.xml configured properly using alternatives, but for now just copy it 
-- name:  Copy HBase Config
-  copy: 
-    src: hadoop-files/conf.my_cluster/hbase-site.xml
-    dest: /etc/hbase/conf/hbase-site.xml
-  register: hbaseconfig
-  
-#hmmm, no module for hadoop file operations
-- name:  Setup HBase Shared Storage
-  sudo: yes
-  sudo_user: hdfs
-  command: $item
-  when: hbaseconfig.changed
-  with_items: 
-    - hadoop fs -mkdir /hbase
-    - hadoop fs -chown hbase /hbase
-
-- name:  HBase
-  service: name=hbase-master state=started
   
 - name:  Setup daemons to start on boot
   service: name={{ item }} state=started enabled=yes
@@ -212,7 +205,6 @@
     - hue
     - oozie
     - postgresql
-    - hbase-master
 
 - name:  Setup single-node daemons to start on boot
   service: name={{ item }} state=started enabled=yes

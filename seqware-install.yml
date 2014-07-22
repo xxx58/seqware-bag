@@ -49,7 +49,7 @@
     - { role: seqware-helloworld }
     
 # setup the vagrant user as well (for virtualbox mostly) 
-- hosts: all 
+- hosts: master 
   sudo: True
   roles:
     - { role: seqware-code, user_name: vagrant }

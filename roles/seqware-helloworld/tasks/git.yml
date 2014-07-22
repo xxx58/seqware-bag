@@ -22,9 +22,10 @@
     chdir=~{{ user_name }}/workflow-dev/HelloWorld creates=~seqware/workflow-dev/HelloWorld/target/HelloWorld-1.0-SNAPSHOT.jar
     mvn install
     
+  # this is a repeated piece of code, figure out syntax for sharing tasks
 - name: Determine Seqware Version 
   sudo_user: "{{ user_name }}"
-  shell: 'ls ~{{ user_name }}/.seqware/self-installs/seqware-distribution-*-full.jar | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?" | head -1'
+  shell: ls ~seqware/.seqware/self-installs/seqware-distribution-*-full.jar | grep -Po "[0-9]+\.[0-9]+\.[0-9]+.*" | sed 's/.\{9\}$//'
   register: det_seqware_version
   changed_when: false
     
@@ -34,6 +35,7 @@
   shell: >
     chdir=~{{ user_name }}/workflow-dev/HelloWorld creates=~{{ user_name }}/workflow-dev/HelloWorld/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_{{ det_seqware_version.stdout }}.zip
     ~{{ user_name }}/bin/seqware bundle package --dir target/Workflow_Bundle_HelloWorld*
+  
     
 - name: Install the workflow
   sudo_user: "{{ user_name }}"

@@ -13,7 +13,7 @@
 - name: Installing gitflow for SeqWare Code
   command: chdir=~{{ user_name }}/gitroot/seqware git hf init
   register: gitflow_init
-  changed_when: "gitflow_init.stdout.find('Already initialized for hubflow.') != -1"
+  changed_when: "'Already initialized for hubflow' not in gitflow_init.stderr"
   ignore_errors: yes
   
 - name: Build normally and create a build log

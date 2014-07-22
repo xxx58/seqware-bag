@@ -10,7 +10,7 @@
   sudo: yes
   sudo_user: seqware
   when: "database_state.stdout.find('No relations found.') != -1"
-  command: $item
+  command: "{{ item }}"
   with_items: 
     - psql -f ~seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db.sql  {{ database }}
     - psql -f ~seqware/gitroot/seqware/seqware-meta-db/seqware_meta_db_data.sql  {{ database }}

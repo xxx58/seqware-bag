@@ -32,7 +32,7 @@
 - name:  Setup HDFS User Directories
   sudo: yes
   sudo_user: hdfs
-  command: $item
+  command: "{[ item }}"
   ignore_errors: yes
   with_items: 
     - hadoop fs -mkdir -p /user/{{ user_name }}
@@ -70,6 +70,12 @@
 - include: 'artifactory.yml'
   when: seqware_provider == "artifactory"
   
+- name : Prime SeqWare script
+  sudo_user: seqware
+  shell: ~seqware/bin/seqware
+  register: script_prime
+  changed_when: "'Downloading' in script_prime.stdout"
+  
 - name:  Setup script path in bash profile
   sudo: yes
   lineinfile: 
@@ -85,11 +91,12 @@
   lineinfile: 
     dest: /etc/sudoers
     create: no
-    line: $item
+    line: "{{ item }}"
     state: present
     insertafter: EOF
+    validate: visudo -cf %s
   with_items: 
-      - '{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
+      - "{{ user_name }} ALL=(ALL) NOPASSWD: ALL"
   when: "'master' in group_names"
   notify: restart oozie
   
