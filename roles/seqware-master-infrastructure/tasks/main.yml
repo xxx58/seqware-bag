@@ -73,12 +73,18 @@
   service: name=hadoop-hdfs-datanode state=started
   when: single_node
   
+- name:  Register HDFS directories
+  shell: hadoop fs -ls /tmp/hadoop-mapred/mapred
+  register: hdfs_state
+  changed_when: False
+  ignore_errors: true
+  
   #hmmm, no module for hadoop file operations
 - name:  Setup HDFS Shared Storage
   sudo: yes
   sudo_user: hdfs
-  command: $item
-  when: namenode_format.changed
+  command: "{{ item }}"
+  when: "namenode_format.changed or 'No such file or directory' in hdfs_state.stderr"
   with_items: 
     - hadoop fs -mkdir /tmp
     - hadoop fs -chmod -R 1777 /tmp
@@ -115,16 +121,11 @@
 - name:  Oozie 
   when: oozie_installed.changed
   notify: restart oozie
-  command: $item
+  command: "{{ item }}"
   with_items:
     - wget -q http://extjs.com/deploy/ext-2.2.zip
     - unzip ext-2.2.zip
     - mv ext-2.2 /var/lib/oozie/
-    - perl -pi -e "s/org.apache.derby.jdbc.EmbeddedDriver/org.postgresql.Driver/;" /etc/oozie/conf/oozie-site.xml
-    - perl -pi -e "s/jdbc:derby:.*create=true/jdbc:postgresql:\/\/localhost:5432\/oozie/;" /etc/oozie/conf/oozie-site.xml
-    - perl -0pi -e "s/<name>oozie.service.JPAService.jdbc.username<\/name>[.\s]*<value>sa<\/value>/<name>oozie.service.JPAService.jdbc.username<\/name><value>oozie<\/value>/;" /etc/oozie/conf/oozie-site.xml
-    - perl -0pi -e "s/<name>oozie.service.JPAService.jdbc.password<\/name>[.\s]*<value> <\/value>/<name>oozie.service.JPAService.jdbc.password<\/name><value>oozie<\/value>/;" /etc/oozie/conf/oozie-site.xml
-    - sudo -u oozie /usr/lib/oozie/bin/ooziedb.sh create -run
     
 # need to figure out how to refactor this cleanly
 - name:  Register oozie database relations

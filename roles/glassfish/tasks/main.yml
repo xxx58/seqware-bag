@@ -27,7 +27,7 @@
 # will need to parameterize this if we ever want the webservice to be on a different host
 - name: create database for users
   when: "database_state.stdout.find('No relations found.') != -1"
-  shell: $item
+  shell: "{{ item }}"
   with_items: 
     - PGPASSWORD=seqware psql -h dbserver -U seqware -f ~ubuntu/seqware_meta_db.sql  seqware_meta_db
     - PGPASSWORD=seqware psql -h dbserver -U seqware -f ~ubuntu/seqware_meta_db_data.sql  seqware_meta_db

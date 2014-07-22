@@ -8,5 +8,5 @@ seqware_provider: "artifactory"
 seqware_version: "1.0.14"
 
 # variable specific to this role
-helloworld_s3_location: "https://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.0.13.zip"
+helloworld_s3_location: "https://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_{{ seqware_version }}.zip"
 user_name: "seqware"

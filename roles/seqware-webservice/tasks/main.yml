@@ -24,20 +24,12 @@
     src: seqware-webservice.xml
     dest: /etc/tomcat7/Catalina/localhost/SeqWareWebService.xml
   notify: restart tomcat7
-
-# this part sucks
-# We are doing a fetch and then copy because hard linking always detects a change and redeploys
-# soft-linking requires the tomcat7 user to have permission into the seqware directory which is not ideal
-# there is no module for copying from one place on the remote file system to another, so fetching and then pushing again is the current approach
-- name:  Fetch jars and xml config files
-  fetch: fail_on_missing=yes src={{ item.src }} dest=/tmp/fetched/{{ ansible_eth0.ipv4.address }}/ flat=yes
+  
+- name: Rsync jars and xml config files
+  command: rsync --itemize-changes {{ item.src }} {{ item.dest }}
+  register: rsync_result
   with_items:
-     - { src: '/home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-{{ det_seqware_version.stdout }}.war' }
-     - { src: '/home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-{{ det_seqware_version.stdout }}.war' }
-
-- name:  Copy up jars and xml config files
-  copy: src={{ item.src }} dest={{ item.dest }} owner=tomcat7
-  with_items:
-     - { src: '/tmp/fetched/{{ ansible_eth0.ipv4.address }}/seqware-webservice-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWareWebService.war' }
-     - { src: '/tmp/fetched/{{ ansible_eth0.ipv4.address }}/seqware-portal-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWarePortal.war' }
+     - { src: '/home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWareWebService.war' }
+     - { src: '/home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWarePortal.war' }
+  changed_when: "rsync_result.stdout.startswith('>f+++++++++')"
   notify: restart tomcat7
