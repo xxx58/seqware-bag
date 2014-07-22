@@ -4,12 +4,7 @@
 - name:  Download HelloWorld workflow
   get_url: url={{ helloworld_s3_location }} dest=~{{ user_name }}/released-bundles owner=seqware
   
-  # this is a repeated piece of code, figure out syntax for sharing tasks
-- name: Determine Seqware Version 
-  sudo_user: "{{ user_name }}"
-  shell: ls ~seqware/.seqware/self-installs/seqware-distribution-*-full.jar | grep -Po "[0-9]+\.[0-9]+\.[0-9]+.*" | sed 's/.\{9\}$//'
-  register: det_seqware_version
-  changed_when: false
+- include: ../../common/tasks/determine_seqware_version.yml
   
 - name: Install the workflow
   sudo_user: "{{ user_name }}"
