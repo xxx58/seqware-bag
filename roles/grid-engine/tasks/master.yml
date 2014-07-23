@@ -100,7 +100,7 @@
   ignore_errors: yes
   when: grid_engine_master == True
   register: sge_parallel_env
-  changed_when: false
+  changed_when: false  
 
 - name: SGE | Template serial parallel environment file
   template: src=serial_profile.j2 dest=/etc/gridengine/templates/sge_serial_profile
@@ -113,3 +113,5 @@
       - qconf -Ap /etc/gridengine/templates/sge_serial_profile
       - qconf -aattr queue pe_list serial main.q
   when:  "'serial is not a parallel environment' in sge_parallel_env.stderr or serial_profile.changed"
+
+# TODO: bindle 1.2.1 re-runs the sge setup script on reboot. Determine whether this is really needed

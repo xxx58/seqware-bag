@@ -8,15 +8,49 @@
     - hadoop-0.20-mapreduce-jobtracker
     - hadoop-client
     - hadoop-hdfs-namenode
-    - hue
-    - hue-server
-    - hue-plugins
-    - hue-oozie
     - oozie
     - oozie-client
     - hbase
     - hbase-master
     - tree
+    - curl
+    - attr
+    
+# at roughly this juncture, we used to install hue
+# this is removed since it wasn't used and hue seems unstable in production 
+# if you wish to enable it, also see http://thinkingcan.blogspot.ca/2013/09/fixed-importerror-cannot-import-name.html
+    
+- name: Setting up filesystem limit
+  lineinfile:
+    dest: /etc/sysctl.conf
+    line: 'fs.file-max = 1623050' 
+    state: present
+    
+- name: Setting up soft file limit
+  lineinfile:
+    dest: /etc/security/limits.conf
+    line: '* soft nofile 162305' 
+    state: present
+
+- name: Setting up hard file limit
+  lineinfile:
+    dest: /etc/security/limits.conf
+    line: '* hard nofile 162305' 
+    state: present
+
+- name: Setting up US locale
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: ^#?AcceptEnv
+    line: '#AcceptEnv'
+    
+- name: locale_gen for US 
+  locale_gen: name=en_US.UTF-8 state=present
+
+- name: reconfigure locales
+  command: dpkg-reconfigure locales
+  register: reconfigure_locales
+  changed_when: "'done' in reconfigure_locales"
     
 - name:  Install Hadoop for a single-node master
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
@@ -102,12 +136,6 @@
 - name:  Start TaskTracker
   service: name=hadoop-0.20-mapreduce-tasktracker state=started
   when: single_node
-  
-- name:  Hue
-  file: state=link src=/usr/lib/hadoop/lib dest=/usr/share/hue/desktop/libs/hadoop/java-lib/hue*jar
-  
-- name:  Hue 
-  service: name=hue state=started
 
 - name:  Make Oozie database user
   sudo_user: postgres
@@ -203,7 +231,6 @@
     - cron
     - hadoop-hdfs-namenode
     - hadoop-0.20-mapreduce-jobtracker
-    - hue
     - oozie
     - postgresql
 

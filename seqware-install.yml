@@ -49,6 +49,10 @@
     - { role: seqware-helloworld }
     
 # setup the vagrant user as well (for virtualbox mostly) 
+# This user is not useful in the context 
+# of cloud installs since there is no shared filesystem between the
+# users local computer and the remote cloud instance.
+
 - hosts: master 
   sudo: True
   roles:
