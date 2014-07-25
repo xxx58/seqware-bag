@@ -3,7 +3,7 @@
 # These tasks are run only on the master node, and therefore once
 - name: Storage | Probe workers
   command: gluster peer probe {{ item }}
-  with_items: groups['grid-worker']
+  with_items: groups['worker']
 
 - name: Storage | Get status
   command: gluster peer status
@@ -12,10 +12,18 @@
 - name: Storage | Get volume status
   command: gluster volume info
   register: gluster_volume_info
+  
+- name: Storage | Get volume status actual
+  command: gluster volume status
+  register: gluster_volume_status
 
 - name: Storage | Create volume
-  command: gluster volume create gv0 {% for x in groups['grid-master'] %} {{ x }}:{{ brick_base }}1/gv0 {% endfor %} {% for x in groups['grid-worker'] %} {{ x }}:{{ brick_base }}1/gv0 {% endfor %}
+  command: gluster volume create gv0 {% for x in groups['master'] %} {{ x }}:{{ brick_base }}1/gv0 {% endfor %} {% for x in groups['worker'] %} {{ x }}:{{ brick_base }}1/gv0 force {% endfor %}
   when: gluster_volume_info.stdout.find('gv0') == -1
+
+- name: Storage | Disable built-in NFS to avoid interference with NFS for other directories
+  command: gluster volume set gv0 nfs.disable on
+  when: "'NFS Server on' in  gluster_volume_status.stdout"
 
 - name: Storage | Start volume
   command: gluster volume start gv0

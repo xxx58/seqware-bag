@@ -71,7 +71,6 @@
   with_items:
      - { name: '/home', src: '{{ hostvars["master"]["ansible_eth0"]["ipv4"]["address"] }}:/home' }
      - { name: '/mnt/home', src: '{{ hostvars["master"]["ansible_eth0"]["ipv4"]["address"] }}:/mnt/home' }
-     - { name: '/mnt/seqware-oozie', src: '{{ hostvars["master"]["ansible_eth0"]["ipv4"]["address"] }}:/mnt/seqware-oozie' }
      - { name: '/mnt/datastore', src: '{{ hostvars["master"]["ansible_eth0"]["ipv4"]["address"] }}:/mnt/datastore' }
 
 - name:  Template init script

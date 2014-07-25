@@ -3,8 +3,16 @@
 # use the ansible stdout_lines as a way to iterate through these devices, making
 # sure that each of them has been properly attached. 
 
-- name: Storage | Identify unmapped block devices
-  shell: "lsblk | awk '{ if ($6 == \"disk\") print \"/dev/\"$1 }' | xargs -I {} bash -c 'if [ \"`file -s -b {}`\" == \"data\" ] ; then echo {} ; fi'"
+# commented out since I ran into http://www.mail-archive.com/ansible-project@googlegroups.com/msg07345.html
+#- name: Storage | Identify unmapped block devices
+#  shell: "lsblk | awk '{ if ($6 == \"disk\") print \"/dev/\"$1 }' | xargs -I {} bash -c 'if [ \"`file -s -b {}`\" == \"data\" ] ; then echo {} ; fi'"
+#  register: glusterfs_storage_block_devices
+
+- name: Copy script to identify unmapped block devices
+  copy: src=awk_command.sh dest=/etc/awk_command.sh mode=0777
+  
+- name: Run script to identify unmapped block devices
+  shell: bash /etc/awk_command.sh
   register: glusterfs_storage_block_devices
 
 # For those which only say "data", we need to create a file system.

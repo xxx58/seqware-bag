@@ -72,9 +72,6 @@
     - maven
     - sysv-rc-conf
     - xfsprogs
-    
-- name:  Setup Data directory on mnt
-  file: state=link src=/mnt dest=/data 
   
 - name:  Set up Hadoop HDFS Local Storage
   file: path={{ item.path }} state={{ item.state }} owner={{ item.owner }} recurse={{ item.recurse }} mode={{ item.mode}}
