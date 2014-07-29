@@ -20,7 +20,7 @@ The config files that we have provided are:
 * vagrant\_cluster\_launch.seqware.admin\_webservice.template This demos the setup of the admin web service by creating one database and one web service node
 * bindle1\_configs\\vagrant\_cluster\_launch.seqware.centos.single.json.template This sets up SeqWare on CentOS using Bindle 1.X, this needs to be merged into this project as conditional Ansible tasks
 
-### Improvements Compared with 1.X Bindle
+## Improvements Compared with 1.X Bindle
 
 Many tasks that used to be handled by Bindle are now handled by Ansible
 * Multithreaded setup and multiple passes
@@ -28,7 +28,7 @@ Many tasks that used to be handled by Bindle are now handled by Ansible
 * Logging of stdout and stderr
 * Failfast behaviour
 
-### Limitations
+## Limitations
 
 Currently, the following specific setup are not handled
 
