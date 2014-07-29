@@ -22,18 +22,31 @@
     #"AWS_ZONE": "us-east-1a",  
     "AWS_KEY": "<FILLMEIN>",
     "AWS_SECRET_KEY": "<FILLMEIN>",
-    # Amazon Ubuntu 12.04.2 LTS
-    "AWS_IMAGE": "ami-d0f89fb9",
+    # Amazon Ubuntu 12.04.3 LTS
+    "AWS_IMAGE": "ami-a73264ce",
     # could also use cc1.4xlarge or c1.xlarge or m1.xlarge or m3.xlarge or m1.large
     # our full integration test work just fine on m1.xlarge so we use that
-    "AWS_INSTANCE_TYPE": "m1.large",
+    "AWS_INSTANCE_TYPE": "m1.xlarge",
     "AWS_SSH_KEY_NAME": "<FILLMEIN e.g. key-1>",
     "AWS_SSH_USERNAME": "ubuntu",
     "AWS_SSH_PEM_FILE": "<FILLMEIN e.g. /home/user/.ssh/key-1.pem>",
+    # Note that this will build and deploy whatever SeqWare version is currently in develop
+    "SEQWARE_VERSION": "develop",
+    "SEQWARE_PROVIDER": "git",
     # SEQWARE
     # NOTE: you can checkout whatever branch you like, see our GitHub site
     # NOTE: you can setup a Maven mirror by adding the variable m2_maven_mirror
-    "ANSIBLE_PLAYBOOK": "ansible/seqware-install.yml --extra-vars \"seqware_version=1.0.14 seqware_provider=git \""
+    "ANSIBLE_PLAYBOOK": "../seqware-bag/seqware-install.yml",
+    # whitelist option for devices to have volumes from being part of gluster
+    # please specify the devices you want to be part of the white list and separate them with a comma
+    # and make sure you have no spaces! (Ex: "--whitelist b,b1,f")
+    # if you don't want gluster to be set up(for singlenode clusters and clusters on BioNimbus) , leave it blank (Ex. "")
+    "GLUSTER_DEVICE_WHITELIST": "",
+    # path to directories you want to use to set up volumes incase you don't have any devices
+    # This can be used if you have no devices to setup gluster with (Ex. "--directorypath /mnt/vols/gluster)
+    # leave this blank otherwise; leave it blank for singlenode cluster and clusters on BioNimbus
+    # since you don't need gluster for it (Ex. "")
+    "GLUSTER_DIRECTORY_PATH": "--directorypath /mnt/volumes/local/gluster1"
   },
   # NODE CONFIG
   # type=[master|worker], in the future we may have more types
@@ -43,19 +56,12 @@
     {
       "name": ["master"],
       "type": "master",
-      "floatip": ["<FILLMEIN>"],
-      # NOTE: you can have multiple scripts but they are cat'd together and run as a single provision step when the box first boots
-      "first_pass_scripts": [
-        "templates/server_setup_scripts/ubuntu_12.04_dummy_script.sh"
-      ] 
+      "floatip": ["<FILLMEIN>"]
     },
     {
       "name": ["worker1", "worker2"],
       "type": "worker",
-      "floatip": ["<FILLMEIN>", "<FILLMEIN>"],
-      "first_pass_scripts": [
-        "templates/server_setup_scripts/ubuntu_12.04_dummy_script.sh"
-      ] 
+      "floatip": ["<FILLMEIN>", "<FILLMEIN>"]
     }
   ]
 }

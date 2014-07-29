@@ -33,8 +33,10 @@
     "AWS_SSH_KEY_NAME": "<FILLMEIN e.g. key-1>",
     "AWS_SSH_USERNAME": "ubuntu",
     "AWS_SSH_PEM_FILE": "<FILLMEIN e.g. /home/user/.ssh/key-1.pem>",
+    "SEQWARE_VERSION": "1.0.15",
+    "SEQWARE_PROVIDER": "artifactory",
     # SEQWARE
-    "ANSIBLE_PLAYBOOK": "ansible/seqware-admin-webservice-install.yml --extra-vars \"seqware_version=1.0.14 seqware_provider=artifactory \""
+    "ANSIBLE_PLAYBOOK": "../seqware-bag/seqware-admin-webservice-install.yml"
   },
   # NODE CONFIG
   # type=[master|worker], in the future we may have more types
@@ -44,19 +46,12 @@
     {
       "name": ["dbserver"],
       "type": "dbserver",
-      "floatip": ["<FILLMEIN>"],
-      # NOTE: you can have multiple scripts but they are cat'd together and run as a single provision step when the box first boots
-      "first_pass_scripts": [
-        "templates/server_setup_scripts/ubuntu_12.04_dummy_script.sh"
-      ] 
+      "floatip": ["<FILLMEIN>"]
     },
     {
       "name": ["webserver"],
       "type": "webserver",
-      "floatip": ["<FILLMEIN>"],
-      "first_pass_scripts": [
-        "templates/server_setup_scripts/ubuntu_12.04_dummy_script.sh"
-      ] 
+      "floatip": ["<FILLMEIN>"]
     }
   ]
 }
