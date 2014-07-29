@@ -15,8 +15,11 @@
 
 - include: ../../common/tasks/create_storage_bricks.yml
 
+- include: ../../common/tasks/identify_relevant_bricks.yml
+
 - name: Storage | Create GlusterFS brick volume
-  shell: mkdir -p /data/brick1/gv0 creates=/data/brick1/gv0
+  shell: mkdir -p {{ item }}/gv0 creates={{ item }}/gv0
+  with_items: bricks.stdout_lines
 
 - name: Storage | Start glusterfs-server
   service: name=glusterfs-server state=started

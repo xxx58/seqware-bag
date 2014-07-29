@@ -155,18 +155,6 @@
     - unzip ext-2.2.zip
     - mv ext-2.2 /var/lib/oozie/
     
-# need to figure out how to refactor this cleanly
-- name:  Register oozie database relations
-  shell: psql -U oozie --command "\dt"
-  register: oozie_database_state
-  changed_when: False
-
-# will need to parameterize this if we ever want the webservice to be on a different host
-- name: create database for oozie
-  when: "oozie_database_state.stdout.find('No relations found.') != -1"
-  shell: sudo -u oozie /usr/lib/oozie/bin/ooziedb.sh create -run
-
-    
 - name:  Oozie started for variable registration 
   service: name=oozie state=started
 
@@ -190,6 +178,17 @@
     src: oozie-site.xml
     dest: '{{ oozie_conf_dir.stdout }}/oozie-site.xml'
   notify: restart oozie
+  
+  # need to figure out how to refactor this cleanly
+- name:  Register oozie database relations
+  shell: psql -U oozie --command "\dt"
+  register: oozie_database_state
+  changed_when: False
+
+# will need to parameterize this if we ever want the webservice to be on a different host
+- name: create database for oozie
+  when: "oozie_database_state.stdout.find('No relations found.') != -1"
+  shell: sudo -u oozie /usr/lib/oozie/bin/ooziedb.sh create -run
 
 - name:  Create Oozie web dir
   file: state=directory path={{ oozie_home_dir.stdout }}/webapps/oozie/WEB-INF/lib 

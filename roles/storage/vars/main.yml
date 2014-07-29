@@ -1,4 +1,5 @@
 ---
 brick_file_system: "xfs"
 
-brick_base: "/data/brick"
+storage_base: "/data"
+brick_base: "{{ storage_base }}/brick"

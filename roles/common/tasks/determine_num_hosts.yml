@@ -1,0 +1,25 @@
+# This is ridiculous, I can't find a better way of counting all the hosts better than this super ugly way
+# I may be dealing with an ansible bug https://github.com/ansible/ansible/issues/5463
+---
+- name: List hosts 
+  debug: msg="{{ item }}"
+  with_items:  groups['all']
+  changed_when: False
+  register: all_hosts
+
+- name: Register number of hosts
+  shell: "echo {{ all_hosts.results | length }}"
+  register: host_count
+  changed_when: False
+  
+- name: Set fact single_node to true
+  set_fact: 
+    single_node: True
+  when: host_count.stdout == "1"
+  changed_when: False
+  
+- name: Set fact single_node to false
+  set_fact: 
+    single_node: False
+  when: host_count.stdout != "1"
+  changed_when: False

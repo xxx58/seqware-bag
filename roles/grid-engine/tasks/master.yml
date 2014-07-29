@@ -53,7 +53,7 @@
   
   # add the master as an execution host if we only have one node
 - name: SGE | Single node execution host templates
-  template: src=execution_host.j2 dest=/etc/gridengine/templates/sge_execution_host_master.sh mode=0555
+  template: src=execution_selfhost.j2 dest=/etc/gridengine/templates/sge_execution_host_master.sh mode=0555
   register: execution_host_template
   when: single_node
 

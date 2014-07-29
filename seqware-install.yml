@@ -16,6 +16,13 @@
   - name: Setting hostname to {{ inventory_hostname }}
     hostname: name={{ inventory_hostname }}
 
+  # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Determine number of hosts in fugly way 
+    include: roles/common/tasks/determine_num_hosts.yml
+        
 - hosts: all
   sudo: True
   vars:
