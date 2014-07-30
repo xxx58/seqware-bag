@@ -22,8 +22,8 @@ The config files that we have provided are:
 * bindle1\_configs\\vagrant\_cluster\_launch.seqware.centos.single.json.template This sets up SeqWare on CentOS using Bindle 1.X, this needs to be merged into this project as conditional Ansible tasks
 
 * message of the day on login over ssh
+## Improvements Compared with 1.X Bindle
 
-### Improvements Compared with 1.X Bindle
 
 Many tasks that used to be handled by Bindle are now handled by Ansible
 * Multithreaded setup and multiple passes
@@ -31,7 +31,7 @@ Many tasks that used to be handled by Bindle are now handled by Ansible
 * Logging of stdout and stderr
 * Failfast behaviour
 
-### Limitations
+## Limitations
 
 Currently, the following specific setup are not handled
 
