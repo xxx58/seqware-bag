@@ -53,7 +53,7 @@
     # This can be used if you have no devices to setup gluster with (Ex. "--directorypath /mnt/vols/gluster)
     # leave this blank otherwise; leave it blank for singlenode cluster and clusters on BioNimbus
     # since you don't need gluster for it (Ex. "")
-    "GLUSTER_DIRECTORY_PATH": "--directorypath /mnt/volumes/local/gluster1"
+    "GLUSTER_DIRECTORY_PATH": ""
   },
   # NODE CONFIG
   # type=[master|worker], in the future we may have more types
