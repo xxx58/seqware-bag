@@ -18,7 +18,9 @@
      - { state: 'directory', path: '~{{ user_name }}/released-bundles', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/provisioned-bundles', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/workflow-dev', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
+     - { state: 'directory', path: '~{{ user_name }}/.seqware', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/.seqware/self-installs', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
+     - { state: 'directory', path: '~{{ user_name }}/gitroot', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/gitroot/seqware', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/.m2/', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }    
      

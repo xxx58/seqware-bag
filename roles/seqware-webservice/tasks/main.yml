@@ -4,6 +4,12 @@
 - name: Template Java 7 and memory size for tomcat
   template: src=tomcat7.j2 dest=/etc/default/tomcat7
   notify: restart tomcat7
+
+- name: Copy over server.xml to disable autodeploy policy
+  copy:
+    src: server.xml
+    dest: /var/lib/tomcat7/conf/server.xml
+  notify: restart tomcat7
   
 # handle user database
 - include: populatedb.yml database=seqware_meta_db

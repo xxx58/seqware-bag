@@ -28,11 +28,21 @@
 
 - name: make a db
   sudo_user: postgres
-  postgresql_db: db=test_seqware_meta_db owner=seqware
+  postgresql_db: db=test_seqware_meta_db 
+                 owner=seqware 
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
   
 - name: make a db
   sudo_user: postgres
-  postgresql_db: db=seqware_meta_db owner=seqware
+  postgresql_db: db=seqware_meta_db 
+                 owner=seqware
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
 
 - name: setup seqware as the owner of the public schema
   sudo_user: postgres
