@@ -179,6 +179,18 @@
     dest: '{{ oozie_conf_dir.stdout }}/oozie-site.xml'
   notify: restart oozie
   
+- name: Copy Oozie Env (Set memory)
+  copy:
+    src: oozie-env.sh
+    dest: '{{ oozie_conf_dir.stdout }}/oozie-env.sh'
+  notify: restart oozie
+  
+- name: Copy Oozie Log4j
+  copy:
+    src: oozie-log4j.properties
+    dest: '{{ oozie_conf_dir.stdout }}/oozie-log4j.properties'
+  notify: restart oozie
+  
   # need to figure out how to refactor this cleanly
 - name:  Register oozie database relations
   shell: psql -U oozie --command "\dt"
