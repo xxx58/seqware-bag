@@ -76,10 +76,10 @@
   with_items: local_paths_split.stdout_lines
 
 - name: Storage | Ensure local brick targets exist
-  file: state=directory path={{ storage_base }}
+  file: state=directory path={{ unencrypted_base }}
 
 - name: Storage | Link up directories as a special kind of brick
-  file: state=link dest={{ unencrypted_base }}_local_{{ item.1 }} src={{ item.0 }}
+  file: state=link dest={{ unencrypted_base }}local_{{ item.1 }} src={{ item.0 }}
   when: item.0
   with_together:
     - local_paths_split.stdout_lines
