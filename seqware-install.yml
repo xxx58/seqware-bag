@@ -15,6 +15,10 @@
     with_items: groups['all']
   - name: Setting hostname to {{ inventory_hostname }}
     hostname: name={{ inventory_hostname }}
+  - name: Disable automatic retrieval of hostname from dhcp on Amazon EC2
+    template: src=roles/common/templates/dhclient.conf dest=/etc/dhcp/dhclient.conf
+  - name: Disable setting hostname from /etc/hostname on Amazon EC2
+    template: src=roles/common/templates/hostname.conf dest=/etc/init/hostname.conf
 
   # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
 - hosts: all

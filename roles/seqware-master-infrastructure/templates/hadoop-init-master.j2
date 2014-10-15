@@ -110,5 +110,9 @@ service hbase-master start
 service hbase-regionserver start
 {% endif %}
 
+# this is only here because SystemV seems to start it too early and the daemon dies 
+# someone with a better knowledge of upstart should be this properly
+service gridengine-master restart
+
 echo `date` 'Completed initializing hadoop filesystems' >> /tmp/hadoop-init.log
 
