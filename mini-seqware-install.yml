@@ -1,0 +1,41 @@
+--- 
+# file: mini-seqware-install.yml
+# This file is used for installing just SeqWare White Star as the bare-bones minimum to run SeqWare workflows
+   
+# Not sure why, but I needed this to create a /etc/hosts that actually works with the Ubuntu image here on openstack
+- hosts: all
+  sudo: True
+  # Idempotent way to build a /etc/hosts file with Ansible using your Ansible hosts inventory for a source.
+  # Will include all hosts the playbook is run on.
+  # Inspired from http://xmeblog.blogspot.com/2013/06/ansible-dynamicaly-update-etchosts.html
+  tasks:
+  - name: Build hosts file for all hosts
+    lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}" state=present
+    when: hostvars[item].ansible_default_ipv4.address is defined
+    with_items: groups['all']
+  - name: Setting hostname to {{ inventory_hostname }}
+    hostname: name={{ inventory_hostname }}
+  - name: Disable automatic retrieval of hostname from dhcp on Amazon EC2
+    template: src=roles/common/templates/dhclient.conf dest=/etc/dhcp/dhclient.conf
+  - name: Disable setting hostname from /etc/hostname on Amazon EC2
+    template: src=roles/common/templates/hostname.conf dest=/etc/init/hostname.conf
+
+# The grid master depends on the hosts file, as we need to know at least who we
+# are by this stage. 
+- hosts: master 
+  sudo: True
+  roles:
+    - { role: java, java_provider: Cloudera }
+    - { role: seqware-code, 
+          seqware_provider: artifactory ,
+          user_name: ubuntu, 
+          setup_hdfs_user: False, 
+          workflow_engine: whitestar, 
+          sw_metadata_method: inmemory,
+          oozie_work_dir: /tmp
+      }
+    
+- hosts: master
+  sudo: True
+  roles:
+    - { role: seqware-helloworld, user_name: ubuntu }
