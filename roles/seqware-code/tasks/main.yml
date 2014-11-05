@@ -119,7 +119,7 @@
       
 - name:  Create home link
   file: state=link src=~{{ user_name }} dest=/home/{{ user_name }} owner={{ user_name }}
-  when: user_name != "ubuntu"
+  when: create_user
 
 
 - name:  Setup OOZIE_URL for oozie CLI 
