@@ -8,8 +8,10 @@ seqware_repo_version: "develop"
 seqware_build_cmd: "mvn clean install -DskipTests"
 
 user_name: "seqware"
+create_user: True
 
 setup_hdfs_user: True
 workflow_engine: "oozie-sge"
 sw_metadata_method: "webservice"
 oozie_work_dir: "/usr/tmp/seqware-oozie"
+

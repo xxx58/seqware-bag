@@ -12,6 +12,7 @@
           seqware_provider: artifactory ,
           user_name: seqware, 
           setup_hdfs_user: False, 
+          create_user: False,
           workflow_engine: whitestar, 
           sw_metadata_method: inmemory,
           oozie_work_dir: /datastore
