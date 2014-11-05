@@ -14,7 +14,7 @@
           setup_hdfs_user: False, 
           workflow_engine: whitestar, 
           sw_metadata_method: inmemory,
-          oozie_work_dir: /tmp
+          oozie_work_dir: /datastore
       }
     
 - hosts: master
