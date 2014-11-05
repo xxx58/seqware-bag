@@ -2,7 +2,7 @@
 # file: roles/seqware-helloworld/tasks/artifactory.yml
     
 - name:  Download HelloWorld workflow
-  get_url: url={{ helloworld_s3_location }} dest=~{{ user_name }}/released-bundles owner=seqware
+  get_url: url={{ helloworld_s3_location }} dest=~{{ user_name }}/released-bundles owner={{ user_name }}
   
 - include: ../../common/tasks/determine_seqware_version.yml
   

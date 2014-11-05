@@ -1,0 +1,23 @@
+--- 
+# file: mini-seqware-install.yml
+# This file is used for installing just SeqWare White Star as the bare-bones minimum to run SeqWare workflows
+   
+# The grid master depends on the hosts file, as we need to know at least who we
+# are by this stage. 
+- hosts: master 
+  sudo: True
+  roles:
+    - { role: java, java_provider: Cloudera }
+    - { role: seqware-code, 
+          seqware_provider: artifactory ,
+          user_name: ubuntu, 
+          setup_hdfs_user: False, 
+          workflow_engine: whitestar, 
+          sw_metadata_method: inmemory,
+          oozie_work_dir: /tmp
+      }
+    
+- hosts: master
+  sudo: True
+  roles:
+    - { role: seqware-helloworld, user_name: ubuntu }

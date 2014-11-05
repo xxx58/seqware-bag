@@ -1,7 +1,7 @@
 # GENERAL
-SW_METADATA_METHOD=webservice
-SW_BUNDLE_DIR=/home/seqware/provisioned-bundles
-SW_BUNDLE_REPO_DIR=/home/seqware/released-bundles
+SW_METADATA_METHOD={{ sw_metadata_method }}
+SW_BUNDLE_DIR=/home/{{ user_name }}/provisioned-bundles
+SW_BUNDLE_REPO_DIR=/home/{{ user_name }}/released-bundles
 # API
 # the base URL for the RESTful SeqWare API
 SW_REST_URL=http://master:8080/SeqWareWebService
@@ -21,7 +21,7 @@ SW_DB=seqware_meta_db
 AWS_ACCESS_KEY=FILLMEIN
 AWS_SECRET_KEY=FILLMEIN
 # the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
-SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
+SW_DEFAULT_WORKFLOW_ENGINE={{ workflow_engine }}
 #
 # SEQWARE PIPELINE
 
@@ -43,7 +43,7 @@ OOZIE_APP_PATH=hdfs://master:8020/user/seqware/
 OOZIE_JOBTRACKER=master:8021
 OOZIE_NAMENODE=hdfs://master:8020
 OOZIE_QUEUENAME=default
-OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+OOZIE_WORK_DIR={{ oozie_work_dir }}
 #
 # OOZIE-SGE SETTINGS:
 # Format of qsub flag for specifying number of threads.

@@ -1,12 +1,18 @@
 ---
 # file: roles/seqware-code/tasks/main.yml
 
+- name:  Install dependencies
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items: 
+    - git
+
 - name:  Add user
   user: 
     home: '/mnt/home/{{ user_name }}'
     createhome: yes
     name: '{{ user_name }}'
     shell: '/bin/bash'
+  when: user_name != "ubuntu"
 
 - name:  Set up SeqWare working directories
   file: path={{ item.path }} state={{ item.state }} owner={{ item.owner }} mode={{ item.mode}} group={{ item.group }}
@@ -29,6 +35,7 @@
   register: hdfs_user_dir
   changed_when: false
   ignore_errors: yes
+  when: setup_hdfs_user
 
   #hmmm, no module for hadoop file operations
 - name:  Setup HDFS User Directories
@@ -39,7 +46,7 @@
   with_items: 
     - hadoop fs -mkdir -p /user/{{ user_name }}
     - hadoop fs -chown -R {{ user_name }} /user/{{ user_name }}
-  when: "'No such file or directory' in hdfs_user_dir.stdout"
+  when: setup_hdfs_user and "'No such file or directory' in hdfs_user_dir.stdout"
     
 - name:  Template seqware settings
   template: src=settings.j2 dest=~{{ user_name }}/.seqware/settings mode=0640 owner={{ user_name }}
@@ -73,8 +80,8 @@
   when: seqware_provider == "artifactory"
   
 - name : Prime SeqWare script
-  sudo_user: seqware
-  shell: ~seqware/bin/seqware
+  sudo_user: "{{ user_name }}"
+  shell: "~{{ user_name }}/bin/seqware"
   register: script_prime
   changed_when: "'Downloading' in script_prime.stdout"
   
@@ -99,7 +106,7 @@
     validate: visudo -cf %s
   with_items: 
       - "{{ user_name }} ALL=(ALL) NOPASSWD: ALL"
-  when: "'master' in group_names"
+  when: setup_hdfs_user and "'master' in group_names"
   notify: restart oozie
   
 - name:  Set user groups
@@ -107,9 +114,11 @@
   with_items:
       - { name: '{{ user_name }}', groups: 'mapred' }
       - { name: '{{ user_name }}', groups: 'hadoop' }
+  when: setup_hdfs_user
       
 - name:  Create home link
   file: state=link src=~{{ user_name }} dest=/home/{{ user_name }} owner={{ user_name }}
+  when: user_name != "ubuntu"
 
 
 - name:  Setup OOZIE_URL for oozie CLI 
@@ -121,4 +130,5 @@
     state: present
     insertafter: EOF
     owner: "{{ user_name }}"
+  when: setup_hdfs_user
     
