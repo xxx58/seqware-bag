@@ -10,7 +10,7 @@
     - { role: java, java_provider: Cloudera }
     - { role: seqware-code, 
           seqware_provider: artifactory ,
-          user_name: ubuntu, 
+          user_name: seqware, 
           setup_hdfs_user: False, 
           workflow_engine: whitestar, 
           sw_metadata_method: inmemory,
@@ -20,4 +20,4 @@
 - hosts: master
   sudo: True
   roles:
-    - { role: seqware-helloworld, user_name: ubuntu }
+    - { role: seqware-helloworld, user_name: seqware }
