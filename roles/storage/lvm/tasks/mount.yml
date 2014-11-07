@@ -1,0 +1,5 @@
+---
+# file: roles/storage/lvm/tasks/mount.yml
+
+- name: Storage | Mount lvm volume
+  mount: name={{ vendor_data }} src=/dev/volume_group/logical_volume fstype={{ brick_file_system }} opts=rw,noauto state=mounted

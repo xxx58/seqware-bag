@@ -2,6 +2,13 @@
 
 This project consists of a set of Ansible playbooks that allow you to deploy a SeqWare cluster. Metadata makes the Playbooks compatible with [CloudBindle](https://github.com/CloudBindle/Bindle) allowing you to deploy to Amazon-AWS, VirtualBox, Openstack, and vCloud. 
 
+## Dependencies
+
+Unfortunately, while tested against ansible 1.6.10, lvm functionality requires a patch from ansible develop that can be applied on ubuntu as follows. 
+
+        wget https://raw.githubusercontent.com/ansible/ansible-modules-extras/devel/system/lvg.py
+        sudo cp lvg.py /usr/share/ansible/system/lvg
+
 ## Sample Configuration Files
 
 ### Updated for Bindle 2
