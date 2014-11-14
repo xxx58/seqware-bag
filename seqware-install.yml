@@ -19,6 +19,10 @@
     template: src=roles/common/templates/dhclient.conf dest=/etc/dhcp/dhclient.conf
   - name: Disable setting hostname from /etc/hostname on Amazon EC2
     template: src=roles/common/templates/hostname.conf dest=/etc/init/hostname.conf
+  - name: Disable ephemeral mount at /mnt for amazon AWS
+    shell: umount /mnt
+    register: umount_output
+    ignore_errors: yes
 
   # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
 - hosts: all
@@ -26,7 +30,16 @@
   tasks:
   - name: Determine number of hosts in fugly way 
     include: roles/common/tasks/determine_num_hosts.yml
-        
+     
+- hosts: all
+  sudo: True
+  vars:
+      shared_storage_system: lvm
+      vendor_data: /mnt/seqware-oozie
+      lvm_device_whitelist: /dev/xvdd,/dev/xvde
+  include: roles/storage/common/tasks/play_deploy_shared_storage.yml
+  when: single_node_lvm is defined
+     
 - hosts: all
   sudo: True
   vars:
