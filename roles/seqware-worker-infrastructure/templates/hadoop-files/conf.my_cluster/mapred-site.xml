@@ -18,12 +18,12 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-<property>
- <name>mapred.job.tracker</name>
- <value>master:8021</value>
-</property>
-<property>
- <name>mapred.local.dir</name>
- <value>/data/1/mapred/local</value>
-</property>
+    <property>
+        <name>mapred.job.tracker</name>
+        <value>{{ inventory_hostname }}:8021</value>
+    </property>
+    <property>
+        <name>mapred.local.dir</name>
+        <value>/data/1/mapred/local</value>
+    </property>
 </configuration>

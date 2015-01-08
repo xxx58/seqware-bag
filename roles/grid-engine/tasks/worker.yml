@@ -2,7 +2,7 @@
 # file: roles/grid-engine/tasks/worker.yml
 - name:  SGE | Setup worker act_qmaster line
   lineinfile: 
-    line: 'master'
+    line: '{{ inventory_hostname }}'
     dest: /var/lib/gridengine/default/common/act_qmaster
     state: present
     create: yes
