@@ -127,7 +127,7 @@
   lineinfile: 
     dest: ~{{ user_name }}/.bash_profile
     create: yes
-    line: 'export OOZIE_URL=http://master:11000/oozie'
+    line: 'export OOZIE_URL=http://{{ inventory_hostname }}:11000/oozie'
     state: present
     insertafter: EOF
     owner: "{{ user_name }}"
