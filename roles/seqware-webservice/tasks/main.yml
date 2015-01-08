@@ -19,12 +19,6 @@
 
 - include: ../../common/tasks/determine_seqware_version.yml
 
-- name:  Copy xml portal config
-  copy: 
-    src: seqware-portal.xml
-    dest: /etc/tomcat7/Catalina/localhost/SeqWarePortal.xml
-  notify: restart tomcat7
-    
 - name:  Copy xml webservice config
   copy: 
     src: seqware-webservice.xml
@@ -36,6 +30,5 @@
   register: rsync_result
   with_items:
      - { src: '/home/seqware/gitroot/seqware/seqware-webservice/target/seqware-webservice-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWareWebService.war' }
-     - { src: '/home/seqware/gitroot/seqware/seqware-portal/target/seqware-portal-{{ det_seqware_version.stdout }}.war', dest: '/var/lib/tomcat7/webapps/SeqWarePortal.war' }
   changed_when: "rsync_result.stdout.startswith('>f+++++++++')"
   notify: restart tomcat7
