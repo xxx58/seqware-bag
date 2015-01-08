@@ -83,9 +83,28 @@
   apt: pkg=apache2 state=present update_cache=yes cache_valid_time=3600
 
 - name:  Copy resources
-  copy: 
-    src: hadoop-files/conf.my_cluster
-    dest: /etc/hadoop/
+  template: 
+    src: hadoop-files/conf.my_cluster/{{ item }}
+    dest: /etc/hadoop/{{ item }}
+  with_items:
+      - capacity-scheduler.xml
+      - hadoop-metrics2.properties  
+      - log4j.properties            
+      - slaves                  
+      - yarn-site.xml
+      - configuration.xsl       
+      - hadoop-metrics.properties   
+      - mapred-queues.xml.template  
+      - ssl-client.xml.example
+      - container-executor.cfg  
+      - hadoop-policy.xml           
+      - mapred-site.xml             
+      - ssl-server.xml.example
+      - core-site.xml           
+      - hdfs-site.xml               
+      - mapred-site.xml.template    
+      - yarn-env.sh
+
   register: hadoopconfig
   
 - name:  Set up Hadoop configuration
