@@ -82,10 +82,13 @@
 - name:  Install apache2
   apt: pkg=apache2 state=present update_cache=yes cache_valid_time=3600
 
+- name: Make sure directory exists
+  file: path=/etc/hadoop/conf.my_cluster state=directory
+
 - name:  Copy resources
   template: 
     src: hadoop-files/conf.my_cluster/{{ item }}
-    dest: /etc/hadoop/{{ item }}
+    dest: /etc/hadoop/conf.my_cluster/{{ item }}
   with_items:
       - capacity-scheduler.xml
       - hadoop-metrics2.properties  

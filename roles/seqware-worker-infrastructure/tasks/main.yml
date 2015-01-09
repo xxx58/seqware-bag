@@ -16,10 +16,13 @@
   user: name=seqware groups=mapred append=yes state=present
   user: name=mapred groups=hadoop append=yes state=present
 
+- name: Make sure directory exists
+  file: path=/etc/hadoop/conf.my_cluster state=directory
+
 - name:  Copy resources
   template: 
     src: hadoop-files/conf.my_cluster/{{ item }}
-    dest: /etc/hadoop/{{ item }}
+    dest: /etc/hadoop/conf.my_cluster/{{ item }}
   with_items:
       - capacity-scheduler.xml
       - hadoop-metrics2.properties  
