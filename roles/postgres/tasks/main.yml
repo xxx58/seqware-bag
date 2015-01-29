@@ -7,6 +7,13 @@
     - python-psycopg2
   environment:
         LC_ALL: en_US.UTF-8
+        LANG: en_US.UTF-8 
+        LC_COLLATE: en_US.UTF-8
+        LC_CTYPE: en_US.UTF-8
+        LC_MESSAGES: en_US.UTF-8
+        LC_MONETARY: en_US.UTF-8
+        LC_NUMERIC: en_US.UTF-8 
+        LC_TIME: en_US.UTF-8
 
 - name: setup pg_hba file
   copy: src=pg_hba.conf dest=/etc/postgresql/9.1/main/pg_hba.conf owner=postgres group=postgres mode=0640
