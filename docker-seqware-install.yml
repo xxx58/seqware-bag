@@ -26,6 +26,11 @@
       glusterfs_version: 3.5 
   include: roles/storage/common/tasks/play_deploy_shared_storage.yml
 
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: docker }
+
 # The grid master depends on the hosts file, as we need to know at least who we
 # are by this stage. 
 - hosts: master 
