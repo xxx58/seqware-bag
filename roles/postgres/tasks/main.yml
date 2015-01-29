@@ -24,6 +24,9 @@
   service: name=postgresql state=restarted enabled=yes
   when: postgresconf.changed
 
+- name: ensure postgres started 
+  service: name=postgresql state=started enabled=yes
+
 - name: make a db user
   sudo_user: postgres
   postgresql_user: user=seqware password=seqware role_attr_flags=CREATEDB,NOSUPERUSER
