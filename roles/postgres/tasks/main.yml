@@ -1,4 +1,3 @@
---
 # Ensure a locale exists.
 - name: Ensure UTF-8 exists
   sudo: yes
