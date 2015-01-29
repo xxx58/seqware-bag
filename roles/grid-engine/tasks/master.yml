@@ -10,6 +10,9 @@
 - name: SGE | Template act_qmaster
   template: src=act_qmaster.j2 dest=/var/lib/gridengine/default/common/act_qmaster
 
+- name: SGE | Ensure gridengine-master started 
+  service: name=gridengine-master state=started
+
 - name: SGE | Configure master
   command: qconf -as {{ inventory_hostname }}
   register: configure_master_as
