@@ -60,6 +60,7 @@
   
 - name:  Create home link
   file: state=link src=~seqware dest=/home/seqware owner=seqware
+  ignore_errors: yes
 
 - name:  Install dependencies
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
