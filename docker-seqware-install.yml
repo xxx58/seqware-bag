@@ -1,0 +1,77 @@
+--- 
+# file: seqware-install.yml
+# This file is used for installing a seqware cluster
+   
+# Not sure why, but I needed this to create a /etc/hosts that actually works with the Ubuntu image here on openstack
+- hosts: all
+  sudo: True
+  # Idempotent way to build a /etc/hosts file with Ansible using your Ansible hosts inventory for a source.
+  # Will include all hosts the playbook is run on.
+  # Inspired from http://xmeblog.blogspot.com/2013/06/ansible-dynamicaly-update-etchosts.html
+  tasks:
+  - name: Setting hostname to {{ inventory_hostname }}
+    hostname: name={{ inventory_hostname }}
+  - name: Disable automatic retrieval of hostname from dhcp on Amazon EC2
+    template: src=roles/common/templates/dhclient.conf dest=/etc/dhcp/dhclient.conf
+  - name: Disable setting hostname from /etc/hostname on Amazon EC2
+    template: src=roles/common/templates/hostname.conf dest=/etc/init/hostname.conf
+  - name: Disable ephemeral mount at /mnt for amazon AWS
+    shell: umount /mnt
+    register: umount_output
+    ignore_errors: yes
+
+  # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Determine number of hosts in fugly way 
+    include: roles/common/tasks/determine_num_hosts.yml
+     
+- hosts: all
+  sudo: True
+  vars:
+      shared_storage_system: lvm
+      vendor_data: /mnt/seqware-oozie
+      lvm_device_whitelist: /dev/xvdd,/dev/xvde
+  include: roles/storage/common/tasks/play_deploy_shared_storage.yml
+  when: single_node_lvm is defined
+     
+- hosts: all
+  sudo: True
+  vars:
+      shared_storage_system: glusterfs
+      vendor_data: /mnt/seqware-oozie
+      glusterfs_version: 3.5 
+  include: roles/storage/common/tasks/play_deploy_shared_storage.yml
+
+# The grid master depends on the hosts file, as we need to know at least who we
+# are by this stage. 
+- hosts: master 
+  sudo: True
+  roles:
+    - { role: java, java_provider: Cloudera }
+    - { role: grid-engine, grid_engine_master: True }
+    - { role: seqware-master-infrastructure }
+    - { role: seqware-code }
+    - { role: seqware-webservice }
+
+- hosts: worker 
+  sudo: True
+  roles:
+    - { role: java, java_provider: Cloudera }
+    - { role: grid-engine, grid_engine_master: False }
+    - { role: seqware-worker-infrastructure }
+    
+- hosts: master 
+  sudo: yes
+  sudo_user: seqware
+  vars: 
+      run_integration_tests: false
+  roles:
+    - { role: seqware-integration-tests, when: "{{ run_integration_tests }} == True" }
+    
+- hosts: master
+  sudo: True
+  roles:
+    - { role: seqware-cron }
+    - { role: seqware-helloworld }
