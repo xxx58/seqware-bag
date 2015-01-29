@@ -5,6 +5,8 @@
     - libpq-dev
     - postgresql
     - python-psycopg2
+  environment:
+        LC_ALL: en_US.UTF-8
 
 - name: setup pg_hba file
   copy: src=pg_hba.conf dest=/etc/postgresql/9.1/main/pg_hba.conf owner=postgres group=postgres mode=0640
