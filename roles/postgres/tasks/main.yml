@@ -1,4 +1,8 @@
 ---
+# Ensure a locale exists.
+- name: Ensure UTF-8 exists
+  locale_gen: name=en_US.UTF-8 state=present
+
 # try setting locale? https://stackoverflow.com/questions/27292109/how-to-set-shell-variable-in-ansible-globally
 - name: dev locale
   action: command sudo update-locale LC_ALL=en_US.utf8
