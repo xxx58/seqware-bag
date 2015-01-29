@@ -39,8 +39,8 @@
   service: name=postgresql state=started enabled=yes
 
 - name: make sure we can sudo as postgres
-  lineinfile: dest=/etc/sudoers state=present regexp='^seqware ALL=(ALL) NOPASSWD: ALL' line='seqware ALL=(ALL) NOPASSWD: ALL'
-
+  lineinfile: >
+     dest=/etc/sudoers state=present regexp='^seqware ALL=(ALL) NOPASSWD: ALL' line='seqware ALL=(ALL) NOPASSWD: ALL'
 
 - name: make a db user
   sudo_user: postgres
