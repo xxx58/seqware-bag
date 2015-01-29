@@ -95,3 +95,4 @@
 
 - name:  Create datastore link
   file: state=link src=/mnt/datastore dest=/datastore owner=seqware group=seqware
+  ignore_errors: yes
