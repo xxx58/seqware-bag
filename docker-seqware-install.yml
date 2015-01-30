@@ -3,8 +3,6 @@
 # This file is used for installing a seqware cluster
 
 # do we need this during the build stage?
-- lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 master' owner=root group=root mode=0644
-   
    
   # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
 - hosts: all
@@ -12,6 +10,8 @@
   tasks:
   - name: Determine number of hosts in fugly way 
     include: roles/common/tasks/determine_num_hosts.yml
+  - name: Set line in file
+    lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 master' owner=root group=root mode=0644
      
 - hosts: all
   sudo: True
