@@ -101,7 +101,7 @@
   when: not 'main.q' in sge_current_queues.stdout_lines
 
 - name: SGE | Template modify queue
-  template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh
+  template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh mode=0555
   register: modify_main_queue_template
 
 - name: SGE | Modify main queue
