@@ -100,9 +100,13 @@
   command: qconf -Aq /etc/gridengine/templates/sge_aq
   when: not 'main.q' in sge_current_queues.stdout_lines
 
+- name: SGE | Template modify queue
+  template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh
+  register: modify_main_queue_template
+
 - name: SGE | Modify main queue
-  command: qconf -mq /etc/gridengine/templates/sge_aq
-  when: main_queue_template.changed
+  command: export EDITOR=/etc/gridengine/templates/sge_mq.sh && qconf -mq main.q 
+  when: modify_main_queue_template.changed
 
 - name: SGE | Check parallel environment status
   command: qconf -sp serial
