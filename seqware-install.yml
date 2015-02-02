@@ -23,6 +23,7 @@
     shell: umount /mnt
     register: umount_output
     ignore_errors: yes
+  when: not docker
 
   # This is a super-fugly way of determining the number of hosts in total, Ansible bug referenced
 - hosts: all
@@ -47,6 +48,11 @@
       vendor_data: /mnt/seqware-oozie
       glusterfs_version: 3.5 
   include: roles/storage/common/tasks/play_deploy_shared_storage.yml
+
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: docker }
 
 # The grid master depends on the hosts file, as we need to know at least who we
 # are by this stage. 
