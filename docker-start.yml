@@ -19,8 +19,6 @@
      - oozie
      - gridengine-master
      - gridengine-exec
-  - name: Start cron in the background
-    shell: nohup cron -f &
      
 - hosts: all 
   sudo: True
