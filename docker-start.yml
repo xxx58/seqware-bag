@@ -19,7 +19,9 @@
      - oozie
      - gridengine-master
      - gridengine-exec
-     
+  - name: Bump up control node memory allocation for high-mem machines
+    lineinfile: dest=~seqware/.seqware/settings regexp='^SW_CONTROL_NODE_MEMORY.*' line='SW_CONTROL_NODE_MEMORY=4000' state=present
+    
 - hosts: all 
   sudo: True
   roles:
