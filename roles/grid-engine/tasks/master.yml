@@ -52,7 +52,7 @@
 
 # loop through and setup worker hosts, if this was better it would modify existing hosts as well instead of ignoring errors
 - name: SGE | Add worker hosts as execution hosts
-  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh && qconf -ae
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh && qconf -ae ; qconf -me {{ item }}
   with_items: groups.worker
   when: execution_host_template.changed 
   ignore_errors: yes
@@ -64,7 +64,7 @@
   when: single_node
 
 - name: SGE | Single node host as execution host
-  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_master.sh && qconf -ae
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_master.sh && qconf -ae ; qconf -me master
   when: execution_host_template.changed
   ignore_errors: yes
 
@@ -94,12 +94,15 @@
 # template handles hostlist, worker queue slots, target load average
 - name: SGE | Template main queue
   template: src=aq.j2 dest=/etc/gridengine/templates/sge_aq
-  when: not 'main.q' in sge_current_queues.stdout_lines
   register: main_queue_template
 
 - name: SGE | Add main queue
   command: qconf -Aq /etc/gridengine/templates/sge_aq
-  when: not 'main.q' in sge_current_queues.stdout_lines or main_queue_template.changed
+  when: not 'main.q' in sge_current_queues.stdout_lines
+
+- name: SGE | Modify main queue
+  command: qconf -mq /etc/gridengine/templates/sge_aq
+  when: main_queue_template.changed
 
 - name: SGE | Check parallel environment status
   command: qconf -sp serial

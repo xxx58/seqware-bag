@@ -1,0 +1,28 @@
+--- 
+# file: docker-start.yml
+# This file is used for installing a seqware container
+   
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Start tomcat7 
+    service: name=tomcat7 state=started
+    ignore_errors: yes
+  - name: Start all required services
+    service: name={{ item }} start=started 
+    with_items: 
+     - postgresql
+     - hadoop-hdfs-datanode
+     - hadoop-hdfs-namenode
+     - hadoop-0.20-mapreduce-jobtracker
+     - hadoop-0.20-mapreduce-tasktracker
+     - oozie
+     - gridengine-master
+     - gridengine-exec
+  - name: Start cron in the background
+    shell: nohup cron -f &
+     
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: grid-engine, single_node: True }
