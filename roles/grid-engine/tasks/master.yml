@@ -105,7 +105,7 @@
   register: modify_main_queue_template
 
 - name: SGE | Modify main queue
-  command: export EDITOR=/etc/gridengine/templates/sge_mq.sh && qconf -mq main.q 
+  shell: export EDITOR=/etc/gridengine/templates/sge_mq.sh && qconf -mq main.q 
   when: modify_main_queue_template.changed
 
 - name: SGE | Check parallel environment status
