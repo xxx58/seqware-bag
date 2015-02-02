@@ -21,7 +21,7 @@
      - gridengine-exec
   - name: Bump up control node memory allocation for high-mem machines
     lineinfile: dest=~seqware/.seqware/settings regexp='^SW_CONTROL_NODE_MEMORY.*' line='SW_CONTROL_NODE_MEMORY=4000' state=present
-    when: ansible_memtotal_mb > 10000
+    when: ansible_memtotal_mb > 100000
     
 - hosts: all 
   sudo: True
