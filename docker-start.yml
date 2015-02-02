@@ -5,11 +5,8 @@
 - hosts: all
   sudo: True
   tasks:
-  - name: Start tomcat7 
-    service: name=tomcat7 state=started
-    ignore_errors: yes
   - name: Start all required services
-    service: name={{ item }} state=started 
+    service: name={{ item }} state=restarted 
     with_items: 
      - postgresql
      - hadoop-hdfs-datanode
@@ -22,6 +19,9 @@
   - name: Bump up control node memory allocation for high-mem machines
     lineinfile: dest=~seqware/.seqware/settings regexp='^SW_CONTROL_NODE_MEMORY.*' line='SW_CONTROL_NODE_MEMORY=4000' state=present
     when: ansible_memtotal_mb > 100000
+  - name: Start tomcat7 
+    service: name=tomcat7 state=started
+    ignore_errors: yes
     
 - hosts: all 
   sudo: True
