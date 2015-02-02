@@ -19,6 +19,8 @@
   - name: Bump up control node memory allocation for high-mem machines
     lineinfile: dest=~seqware/.seqware/settings regexp='^SW_CONTROL_NODE_MEMORY.*' line='SW_CONTROL_NODE_MEMORY=4000' state=present
     when: ansible_memtotal_mb > 100000
+  - name: Redirect oozie working directory so that workflow runs are persisted
+    lineinfile: dest=~seqware/.seqware/settings regexp='^OOZIE_WORK_DIR.*' line='OOZIE_WORK_DIR=/datastore' state=present
   - name: Start tomcat7 
     service: name=tomcat7 state=started
     ignore_errors: yes
