@@ -11,14 +11,17 @@
   tasks:
   - name: Build hosts file for all hosts
     lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}" state=present
-    when: hostvars[item].ansible_default_ipv4.address is defined
+    when: hostvars[item].ansible_default_ipv4.address is defined and docker is not defined
     with_items: groups['all']
   - name: Setting hostname to {{ inventory_hostname }}
     hostname: name={{ inventory_hostname }}
+    when: docker is not defined
   - name: Disable automatic retrieval of hostname from dhcp on Amazon EC2
     template: src=roles/common/templates/dhclient.conf dest=/etc/dhcp/dhclient.conf
+    when: docker is not defined
   - name: Disable setting hostname from /etc/hostname on Amazon EC2
     template: src=roles/common/templates/hostname.conf dest=/etc/init/hostname.conf
+    when: docker is not defined
   - name: Disable ephemeral mount at /mnt for amazon AWS
     shell: umount /mnt
     register: umount_output
@@ -47,6 +50,11 @@
       vendor_data: /mnt/seqware-oozie
       glusterfs_version: 3.5 
   include: roles/storage/common/tasks/play_deploy_shared_storage.yml
+
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: docker }
 
 # The grid master depends on the hosts file, as we need to know at least who we
 # are by this stage. 

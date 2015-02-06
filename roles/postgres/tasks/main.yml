@@ -1,4 +1,17 @@
----
+# Ensure a locale exists.
+- name: Ensure UTF-8 exists
+  sudo: yes
+  shell: locale-gen en_US.UTF-8 && dpkg-reconfigure locales 
+
+# try setting locale? https://stackoverflow.com/questions/27292109/how-to-set-shell-variable-in-ansible-globally
+- name: dev locale
+  action: command sudo update-locale LC_ALL=en_US.utf8
+- name: set default locale
+  sudo: yes
+  lineinfile: dest=/etc/default/locale
+    regexp="LC_ALL"
+    line="LC_ALL=\"en_US.utf8\""
+
 - name: install postgres pkgs
   apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
   with_items:
@@ -21,6 +34,13 @@
 - name: restart postgres if it changed
   service: name=postgresql state=restarted enabled=yes
   when: postgresconf.changed
+
+- name: ensure postgres started 
+  service: name=postgresql state=started enabled=yes
+
+- name: make sure we can sudo as postgres
+  lineinfile: >
+     dest=/etc/sudoers state=present regexp='^seqware ALL=(ALL) NOPASSWD: ALL' line='seqware ALL=(ALL) NOPASSWD: ALL'
 
 - name: make a db user
   sudo_user: postgres

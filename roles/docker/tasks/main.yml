@@ -1,0 +1,7 @@
+- name: install extra stuff that is normally present
+  apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - sudo 
+    - curl 
+    - vim
+    - openssh-server 

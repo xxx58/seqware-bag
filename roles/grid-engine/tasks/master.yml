@@ -7,6 +7,12 @@
 - name: SGE | Install gridengine-master 
   apt: pkg=gridengine-master state=present update_cache=yes cache_valid_time=3600
 
+- name: SGE | Template act_qmaster
+  template: src=act_qmaster.j2 dest=/var/lib/gridengine/default/common/act_qmaster
+
+- name: SGE | Ensure gridengine-master started 
+  service: name=gridengine-master state=started
+
 - name: SGE | Configure master
   command: qconf -as {{ inventory_hostname }}
   register: configure_master_as
@@ -46,7 +52,7 @@
 
 # loop through and setup worker hosts, if this was better it would modify existing hosts as well instead of ignoring errors
 - name: SGE | Add worker hosts as execution hosts
-  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh && qconf -ae
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_{{ item }}.sh && qconf -ae ; qconf -me {{ item }}
   with_items: groups.worker
   when: execution_host_template.changed 
   ignore_errors: yes
@@ -58,7 +64,7 @@
   when: single_node
 
 - name: SGE | Single node host as execution host
-  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_master.sh && qconf -ae
+  shell: export EDITOR=/etc/gridengine/templates/sge_execution_host_master.sh && qconf -ae ; qconf -me master
   when: execution_host_template.changed
   ignore_errors: yes
 
@@ -88,12 +94,19 @@
 # template handles hostlist, worker queue slots, target load average
 - name: SGE | Template main queue
   template: src=aq.j2 dest=/etc/gridengine/templates/sge_aq
-  when: not 'main.q' in sge_current_queues.stdout_lines
   register: main_queue_template
 
 - name: SGE | Add main queue
   command: qconf -Aq /etc/gridengine/templates/sge_aq
-  when: not 'main.q' in sge_current_queues.stdout_lines or main_queue_template.changed
+  when: not 'main.q' in sge_current_queues.stdout_lines
+
+- name: SGE | Template modify queue
+  template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh mode=0555
+  register: modify_main_queue_template
+
+- name: SGE | Modify main queue
+  shell: export EDITOR=/etc/gridengine/templates/sge_mq.sh && qconf -mq main.q 
+  when: modify_main_queue_template.changed
 
 - name: SGE | Check parallel environment status
   command: qconf -sp serial

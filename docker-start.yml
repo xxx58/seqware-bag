@@ -1,0 +1,31 @@
+--- 
+# file: docker-start.yml
+# This file is used for installing a seqware container
+   
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Start all required services
+    service: name={{ item }} state=restarted 
+    with_items: 
+     - postgresql
+     - hadoop-hdfs-datanode
+     - hadoop-hdfs-namenode
+     - hadoop-0.20-mapreduce-jobtracker
+     - hadoop-0.20-mapreduce-tasktracker
+     - oozie
+     - gridengine-master
+     - gridengine-exec
+  - name: Bump up control node memory allocation for high-mem machines
+    lineinfile: dest=~seqware/.seqware/settings regexp='^SW_CONTROL_NODE_MEMORY.*' line='SW_CONTROL_NODE_MEMORY=4000' state=present
+    when: ansible_memtotal_mb > 100000
+  - name: Redirect oozie working directory so that workflow runs are persisted
+    lineinfile: dest=~seqware/.seqware/settings regexp='^OOZIE_WORK_DIR.*' line='OOZIE_WORK_DIR=/datastore' state=present
+  - name: Start tomcat7 
+    service: name=tomcat7 state=started
+    ignore_errors: yes
+    
+- hosts: all 
+  sudo: True
+  roles:
+    - { role: grid-engine, single_node: True , grid_engine_master: True }
