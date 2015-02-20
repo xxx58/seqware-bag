@@ -1,6 +1,11 @@
 ---
 # file: roles/seqware-master-infrastructure/tasks/main.yml
 
+- name: Setup cloudera preference
+  copy:
+    src: cloudera.pref
+    dest: /etc/apt/preferences.d/cloudera.pref
+
 - name:  Install Hadoop for a master
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
   register: oozie_installed
