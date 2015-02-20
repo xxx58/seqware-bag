@@ -295,7 +295,7 @@
   when: nfs_setup.changed
   
 - name:  NFS Restart
-  service: name=portmap state=restarted
+  service: name=rpcbind state=restarted
   when: nfs_setup.changed
   
 - name:  NFS Restart
