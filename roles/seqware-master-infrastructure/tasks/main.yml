@@ -298,11 +298,13 @@
   service: name=rpcbind state=restarted
   when: nfs_setup.changed
   ignore_errors: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
 
 - name:  NFS Restart
-  service: name=portbind state=restarted
+  service: name=portmap state=restarted
   when: nfs_setup.changed
   ignore_errors: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'precise'
   
 - name:  NFS Restart
   service: name=nfs-kernel-server state=restarted
