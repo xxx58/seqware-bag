@@ -102,6 +102,7 @@
 - name: SGE | Template main queue
   template: src=aq.j2 dest=/etc/gridengine/templates/sge_aq
   register: main_queue_template
+  when: docker is not defined
 
 - name: SGE | Add main queue
   command: qconf -Aq /etc/gridengine/templates/sge_aq
