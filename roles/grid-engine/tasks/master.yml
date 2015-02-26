@@ -135,6 +135,6 @@
   with_items:
       - qconf -Ap /etc/gridengine/templates/sge_serial_profile
       - qconf -aattr queue pe_list serial main.q
-  when:  "'serial is not a parallel environment' in sge_parallel_env.stderr or serial_profile.changed"
+  when:  "docker is not defined and 'serial is not a parallel environment' in sge_parallel_env.stderr or docker is not defined and serial_profile.changed"
 
 # TODO: bindle 1.2.1 re-runs the sge setup script on reboot. Determine whether this is really needed
