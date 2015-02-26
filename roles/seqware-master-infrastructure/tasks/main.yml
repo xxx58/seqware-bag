@@ -297,6 +297,12 @@
 - name:  NFS Restart
   service: name=rpcbind state=restarted
   when: nfs_setup.changed
+  ignore_errors: yes
+
+- name:  NFS Restart
+  service: name=portbind state=restarted
+  when: nfs_setup.changed
+  ignore_errors: yes
   
 - name:  NFS Restart
   service: name=nfs-kernel-server state=restarted
