@@ -46,7 +46,7 @@
 
 - name: SGE | Add the capsid user
   command: qconf -au capsid users
-  when: not 'capsid' in sge_current_users.stdout.split(',') and docker is not defined
+  when: docker is not defined and not 'capsid' in sge_current_users.stdout.split(',') 
   
 # loop through and template worker hosts
 - name: SGE | Generate execution host templates
@@ -84,11 +84,11 @@
 # The template now handles the hostlist properly
 - name: SGE | Template host group configuration
   template: src=ahgrp.j2 dest=/etc/gridengine/templates/sge_ahgrp
-  when: not '@allhosts' in sge_current_host_groups.stdout_lines and docker is not defined
+  when: docker is not defined and not '@allhosts' in sge_current_host_groups.stdout_lines 
 
 - name: SGE | Add the host group configuration
   command: qconf -Ahgrp /etc/gridengine/templates/sge_ahgrp
-  when: not '@allhosts' in sge_current_host_groups.stdout_lines and docker is not defined
+  when: docker is not defined and not '@allhosts' in sge_current_host_groups.stdout_lines
 
 # Again, we don't want to do this if it already exists
 - name: SGE | Check current queues
@@ -105,7 +105,7 @@
 
 - name: SGE | Add main queue
   command: qconf -Aq /etc/gridengine/templates/sge_aq
-  when: not 'main.q' in sge_current_queues.stdout_lines and docker is not defined
+  when: docker is not defined and not 'main.q' in sge_current_queues.stdout_lines
 
 - name: SGE | Template modify queue
   template: src=mq.j2 dest=/etc/gridengine/templates/sge_mq.sh mode=0555
