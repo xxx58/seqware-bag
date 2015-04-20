@@ -178,7 +178,7 @@
   notify: restart oozie
   command: "{{ item }}"
   with_items:
-    - wget -q http://extjs.com/deploy/ext-2.2.zip
+    - wget -q http://archive.cloudera.com/gplextras/misc/ext-2.2.zip
     - unzip ext-2.2.zip
     - mv ext-2.2 /var/lib/oozie/
     
