@@ -1,6 +1,11 @@
 ---
 # file: roles/seqware-master-infrastructure/tasks/main.yml
 
+- name: Setup cloudera preference
+  copy:
+    src: cloudera.pref
+    dest: /etc/apt/preferences.d/cloudera.pref
+
 - name:  Install Hadoop for a master
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
   register: oozie_installed
@@ -156,6 +161,7 @@
   service: name=hadoop-0.20-mapreduce-jobtracker state=started
 
 - name:  Start TaskTracker
+  sudo: True
   service: name=hadoop-0.20-mapreduce-tasktracker state=started
   when: single_node
 
@@ -173,7 +179,7 @@
   notify: restart oozie
   command: "{{ item }}"
   with_items:
-    - wget -q http://extjs.com/deploy/ext-2.2.zip
+    - wget -q http://archive.cloudera.com/gplextras/misc/ext-2.2.zip
     - unzip ext-2.2.zip
     - mv ext-2.2 /var/lib/oozie/
     
@@ -290,8 +296,16 @@
   when: nfs_setup.changed
   
 - name:  NFS Restart
+  service: name=rpcbind state=restarted
+  when: nfs_setup.changed
+  ignore_errors: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
+
+- name:  NFS Restart
   service: name=portmap state=restarted
   when: nfs_setup.changed
+  ignore_errors: yes
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'precise'
   
 - name:  NFS Restart
   service: name=nfs-kernel-server state=restarted
