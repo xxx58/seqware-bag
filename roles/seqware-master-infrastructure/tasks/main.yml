@@ -161,6 +161,7 @@
   service: name=hadoop-0.20-mapreduce-jobtracker state=started
 
 - name:  Start TaskTracker
+  sudo: True
   service: name=hadoop-0.20-mapreduce-tasktracker state=started
   when: single_node
 
