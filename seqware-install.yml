@@ -65,7 +65,7 @@
     - { role: grid-engine, grid_engine_master: True }
     - { role: seqware-master-infrastructure }
     - { role: seqware-code }
-    - { role: seqware-webservice }
+    - { role: seqware-webservice, when: test_environment is undefined }
 
 - hosts: worker
   sudo: True
@@ -85,5 +85,5 @@
 - hosts: master
   sudo: True
   roles:
-    - { role: seqware-cron }
-    - { role: seqware-helloworld }
+    - { role: seqware-cron, when: test_environment is undefined }
+    - { role: seqware-helloworld, when: test_environment is undefined }
