@@ -45,6 +45,6 @@
 - name: Java | Set JAVA_HOME
   lineinfile:
     line: 'export JAVA_HOME=/usr/lib/jvm/java-8-oracle'
-    dest: /etc/profile
+    dest: /etc/bash.bashrc
     state: present
     create: yes
