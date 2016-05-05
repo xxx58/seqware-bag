@@ -84,10 +84,12 @@
   sudo_user: "{{ user_name }}"
   shell: "~{{ user_name }}/bin/seqware"
   register: script_prime
+  when: test_environment is undefined
   changed_when: "'Downloading' in script_prime.stdout"
   
 - name:  Setup script path in bash profile
   sudo: yes
+  when: test_environment is undefined
   lineinfile: 
     dest: ~{{ user_name }}/.bash_profile
     create: yes
