@@ -18,6 +18,22 @@
   apt: name=oracle-java8-installer state=latest update-cache=yes force=yes
   sudo: yes
 
+- name: Java | Set up Java
+  command: 'update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-oracle/jre/bin/java 2000'
+  when: dpkg_result.changed
+
+- name: Java | Set up Java
+  command: 'update-alternatives --set java /usr/lib/jvm/java-8-oracle/jre/bin/java'
+  when: dpkg_result.changed
+
+- name: Java | Set up Jar
+  command: 'update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/java-8-oracle/bin/jar 2000'
+  when: dpkg_result.changed
+
+- name: Java | Set up Jar
+  command: 'update-alternatives --set jar /usr/lib/jvm/java-8-oracle/bin/jar'
+  when: dpkg_result.changed
+
 - name: Java | Set JAVA_HOME
   lineinfile:
     line: 'JAVA_HOME=/usr/lib/jvm/java-8-oracle'
