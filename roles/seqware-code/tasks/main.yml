@@ -75,12 +75,10 @@
     owner: "{{ user_name }}"
     
 - include: 'git.yml'
-  when: test_environment is undefined
-  when: seqware_provider == "git"
+  when: seqware_provider == "git" and test_environment is undefined
 
 - include: 'artifactory.yml'
-  when: test_environment is undefined
-  when: seqware_provider == "artifactory"
+  when: seqware_provider == "artifactory" and test_environment is undefined
   
 - name : Prime SeqWare script
   sudo_user: "{{ user_name }}"
