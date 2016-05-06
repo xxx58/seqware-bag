@@ -48,3 +48,17 @@
     dest: /etc/bash.bashrc
     state: present
     create: yes
+
+- name: Java | Set JAVA_HOME for root?
+  lineinfile:
+    line: 'export JAVA_HOME=/usr/lib/jvm/java-8-oracle'
+    dest: /root/.bash_profile
+    state: present
+    create: yes
+
+- name: Java | Really set JAVA_HOME for root?
+  lineinfile:
+    line: 'Defaults   env_keep += "JAVA_HOME"'
+    dest: /etc/sudoers
+    state: present
+    create: yes
