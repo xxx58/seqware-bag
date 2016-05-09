@@ -16,8 +16,10 @@
   when: create_user
 
 - name:  Set up SeqWare working directories
-  file: path={{ item.path }} state={{ item.state }} owner={{ item.owner }} mode={{ item.mode}} group={{ item.group }}
+  file: path={{ item.path }} state={{ item.state }} owner={{ item.owner }} mode={{ item.mode}} group={{ item.group }} recurse=yes
   with_items:
+     - { state: 'directory', path: '/mnt/home/{{ user_name }}', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
+     - { state: 'directory', path: '~{{ user_name }}', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/bin', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/jars', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
      - { state: 'directory', path: '~{{ user_name }}/crons', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
@@ -69,7 +71,7 @@
   lineinfile: 
     dest: ~{{ user_name }}/.bash_profile
     create: yes
-    line: 'export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m"'
+    line: 'export MAVEN_OPTS="-Xmx1024m"'
     state: present
     insertafter: EOF
     owner: "{{ user_name }}"

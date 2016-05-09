@@ -8,6 +8,10 @@ SW_REST_URL=http://{{ inventory_hostname }}:8080/SeqWareWebService
 # the username and password to connect to the REST API used by SeqWare Pipeline to write back processing info to the DB 
 SW_REST_USER=admin@admin.com
 SW_REST_PASS=admin
+
+# optional: In atypical environments, the default h_vmem constraint for SGE is too stringent. Override them using this (units in megabytes)
+SW_CONTROL_NODE_MEMORY=4000
+
 # the base URL for the admin web service
 SW_ADMIN_REST_URL=http://localhost:38080/seqware-admin-webservice
 # used for direct database connection by admin tools

@@ -1,6 +1,12 @@
 ---
 # file: roles/seqware-helloworld/tasks/main.yml
 
+# weird, not sure why this may be an issue in Ubuntu 14.04
+- name:  Ensure users own their home directories
+  file: path={{ item.path }} state={{ item.state }} owner={{ item.owner }} mode={{ item.mode}} group={{ item.group }} recurse=yes
+  with_items:
+     - { state: 'directory', path: '/mnt/home/{{ user_name }}', owner: '{{ user_name }}', group: '{{ user_name }}', mode: '0700' }
+
 - include: 'git.yml'
   when: seqware_provider == "git"
 

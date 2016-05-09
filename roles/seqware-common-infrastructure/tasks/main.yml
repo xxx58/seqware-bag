@@ -2,7 +2,7 @@
 # file: roles/seqware-common-infrastructure/tasks/main.yml
 - name:  Add Hadoop repository
   lineinfile: 
-    line: 'deb [arch=amd64] http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh precise-cdh4.5.0 contrib'
+    line: 'deb [arch=amd64] http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5.4.4 contrib'
     dest: /etc/apt/sources.list.d/cloudera.list
     state: present
     create: yes
@@ -11,7 +11,7 @@
 
 - name:  Add Hadoop repository
   lineinfile: 
-    line: 'deb-src http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh precise-cdh4.5.0 contrib'
+    line: 'deb-src http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5.4.4 contrib'
     dest: /etc/apt/sources.list.d/cloudera.list
     state: present
     create: yes
@@ -19,7 +19,7 @@
   register: hadooprepo
 
 - name:  Add signing key
-  apt_key: url=http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh/archive.key state=present
+  apt_key: url=http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh/archive.key state=present
   register: hadooprepo
 
 - apt: update_cache=yes

@@ -1,7 +1,7 @@
 - name:  Install tomcat7
   apt: name=tomcat7 state=present update_cache=yes cache_valid_time=3600
 
-- name: Template Java 7 and memory size for tomcat
+- name: Template Java 8 and memory size for tomcat
   template: src=tomcat7.j2 dest=/etc/default/tomcat7
   notify: restart tomcat7
 
