@@ -87,3 +87,20 @@
   roles:
     - { role: seqware-cron, when: test_environment is undefined }
     - { role: seqware-helloworld, when: test_environment is undefined }
+
+# cleanup for seqware 1.2
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Clean extra packages
+    apt: name={{ item }} state=absent purge=yes
+    with_items:
+      - maven
+      - spark-core
+      - hive
+      - pig
+      - solr
+      - hbase
+
+  - name: Autoremove unused packages
+    command: apt-get -y autoremove

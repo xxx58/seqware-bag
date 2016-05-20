@@ -7,7 +7,7 @@
     dest: /etc/apt/preferences.d/cloudera.pref
 
 - name:  Install Hadoop for a master
-  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600 install_recommends=no
   register: oozie_installed
   with_items: 
     - hadoop-0.20-mapreduce-jobtracker
@@ -58,7 +58,7 @@
   changed_when: "'done' in reconfigure_locales"
     
 - name:  Install Hadoop for a single-node master
-  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600 install_recommends=no
   with_items: 
     - hadoop-0.20-mapreduce-tasktracker 
     - hadoop-hdfs-datanode
@@ -67,7 +67,7 @@
   when: single_node
 
 - name:  Install zookeeper
-  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600 install_recommends=no
   with_items: 
     - zookeeper
     - zookeeper-server
