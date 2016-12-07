@@ -13,7 +13,7 @@
   get_url: url={{ item.url }} dest={{ item.dest }} owner=ubuntu
   with_items:
      - { url: 'http://download.java.net/glassfish/3.1.2.2/release/glassfish-3.1.2.2-unix.sh', dest: '~ubuntu' }
-     - { url: 'http://wrench.res.oicr.on.ca/artifactory/simple/seqware-release/com/github/seqware/seqware-admin-webservice/1.0.14/seqware-admin-webservice-1.0.14.war', dest: '~ubuntu' }
+     - { url: 'http://seqwaremaven.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-admin-webservice/1.0.14/seqware-admin-webservice-1.0.14.war', dest: '~ubuntu' }
      - { url: 'https://github.com/SeqWare/seqware/raw/develop/seqware-meta-db/src/main/resources/net/sourceforge/seqware/metadb/util/seqware_meta_db.sql', dest: '~ubuntu' }
      - { url: 'https://github.com/SeqWare/seqware/raw/develop/seqware-meta-db/src/main/resources/net/sourceforge/seqware/metadb/util/seqware_meta_db_data.sql', dest: '~ubuntu' }
      - { url: 'https://github.com/SeqWare/seqware/raw/develop/seqware-meta-db/src/main/resources/net/sourceforge/seqware/metadb/util/seqware_meta_db_testdata.sql', dest: '~ubuntu' }
