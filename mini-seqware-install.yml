@@ -7,7 +7,6 @@
 - hosts: master
   sudo: True
   roles:
-    - { role: java, java_provider: Oracle8 }
     - { role: seqware-code,
           seqware_provider: artifactory ,
           user_name: seqware,
